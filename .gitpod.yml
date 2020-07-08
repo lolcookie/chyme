@@ -2,5 +2,6 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
+  - before: npm install -g firebase-tools
   - init: yarn install && yarn run build
     command: yarn run start
