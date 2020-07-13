@@ -12,14 +12,24 @@ import {
   Image,
   Spacer,
   Input,
-  Col
+  Col,
+  AutoComplete
 } from "@zeit-ui/react";
 //@ts-ignore
 import Coverflow from "react-coverflow";
 
 import { Power, Menu, Search, ChevronLeft } from "@zeit-ui/react-icons";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory
+} from "react-router-dom";
+
+//Views
+import { StreamView } from "./StreamView";
 
 const brandPrimary = "#50E3C2";
 
@@ -78,13 +88,25 @@ const CoverFlowComponent = () => (
   </div>
 );
 
-const Navbar = () => {
+const SearchBox = () => {
+  const options = [
+    { label: "London", value: "london" },
+    { label: "Sydney", value: "sydney" },
+    { label: "Shanghai", value: "shanghai" }
+  ];
+  return (
+    <AutoComplete width="100%" placeholder="Enter here" options={options} />
+  );
+};
+
+export const Navbar = () => {
   const [searchText, setSearchText] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
   const handler = (e: any) => {
     setSearchText(e.target.value);
     console.log(e.target.value);
   };
+
   const isWideDisplay = useMediaQuery("md", { match: "up" });
   const content = () => (
     <>
@@ -126,29 +148,7 @@ const Navbar = () => {
           }}
           icon={<ChevronLeft color="white" />}
         />
-        <input
-          value={searchText}
-          onChange={handler}
-          style={{
-            width: "100%",
-            marginLeft: "8px",
-            backgroundColor: "transparent",
-            border: "none",
-            borderBottom: "1px solid gray"
-          }}
-          placeholder="Search"
-        />
-        <Button
-          onClick={() => setIsSearchActive(true)}
-          size="large"
-          style={{
-            minWidth: "64px",
-            padding: 0,
-            backgroundColor: "transparent",
-            border: "none"
-          }}
-          icon={<Search color="white" />}
-        />
+        <SearchBox />
       </Row>
     </>
   ) : (
@@ -208,26 +208,28 @@ const Navbar = () => {
 
 const About = () => <Text h3>About</Text>;
 
-const Dashboard = () => <Text h3>About</Text>;
+const HomeStationCard = () => {
+  const history = useHistory();
 
-const HomeStationCard = () => (
-  <Card shadow>
-    <Row align="middle">
-      <div style={{ height: "100px", width: "100px", borderRadius: "4px" }}>
-        <Image
-          src="https://www.100gecs.com/images/RFPCover.jpg"
-          height={100}
-          width={100}
-          style={{ objectFit: "cover", borderRadius: "4px" }}
-        />
-      </div>
-      <Col style={{ paddingLeft: "16px", paddingRight: "16px" }}>
-        <h4>The Evil Rabbit</h4>
-        <p>shadow card.</p>
-      </Col>
-    </Row>
-  </Card>
-);
+  return (
+    <Card shadow onClick={() => history.push("/stream")}>
+      <Row align="middle">
+        <div style={{ height: "100px", width: "100px", borderRadius: "4px" }}>
+          <Image
+            src="https://www.100gecs.com/images/RFPCover.jpg"
+            height={100}
+            width={100}
+            style={{ objectFit: "cover", borderRadius: "4px" }}
+          />
+        </div>
+        <Col style={{ paddingLeft: "16px", paddingRight: "16px" }}>
+          <h4>The Evil Rabbit</h4>
+          <p>shadow card.</p>
+        </Col>
+      </Row>
+    </Card>
+  );
+};
 
 const Home = () => (
   <div style={{ backgroundColor: "#FAFAFA" }}>
@@ -269,8 +271,8 @@ function App() {
           <Route path="/about">
             <About />
           </Route>
-          <Route path="/dashboard">
-            <Dashboard />
+          <Route path="/stream">
+            <StreamView />
           </Route>
         </Switch>
       </Router>
