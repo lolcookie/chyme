@@ -7,6 +7,7 @@ import {
   Row,
   Button,
   ButtonDropdown,
+  Avatar,
   Card,
   Popover,
   Image,
@@ -154,7 +155,12 @@ export const Navbar = () => {
           icon={<ChevronLeft color="white" />}
         />
         <Row
-          style={{ background: "white", width: "100%", borderRadius: "5px" }}
+          style={{
+            background: "white",
+            width: "100%",
+            borderRadius: "5px",
+            marginRight: "8px"
+          }}
         >
           <SearchBox />
         </Row>
@@ -196,6 +202,7 @@ export const Navbar = () => {
             icon={<Search color="white" />}
           />
         )}
+        <Button size="small">Login</Button>
 
         <Popover
           placement="bottomEnd"
@@ -208,7 +215,7 @@ export const Navbar = () => {
             justifyContent: "center"
           }}
         >
-          <Menu color="white" />
+          <Avatar text="Ana" />
         </Popover>
       </Row>
     </Row>
