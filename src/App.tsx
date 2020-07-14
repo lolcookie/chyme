@@ -95,7 +95,12 @@ const SearchBox = () => {
     { label: "Shanghai", value: "shanghai" }
   ];
   return (
-    <AutoComplete width="100%" placeholder="Enter here" options={options} />
+    <AutoComplete
+      clearable
+      width="100%"
+      placeholder="Enter here"
+      options={options}
+    />
   );
 };
 
@@ -148,7 +153,11 @@ export const Navbar = () => {
           }}
           icon={<ChevronLeft color="white" />}
         />
-        <SearchBox />
+        <Row
+          style={{ background: "white", width: "100%", borderRadius: "5px" }}
+        >
+          <SearchBox />
+        </Row>
       </Row>
     </>
   ) : (

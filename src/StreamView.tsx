@@ -27,11 +27,36 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 const brandPrimary = "#50E3C2";
 const brandSecondary = "#6558f5";
-const ChatMessage = ({ isAdmin }: { isAdmin?: boolean }) => {
+const ChatMessage = ({
+  isAdmin,
+  isPlaying
+}: {
+  isAdmin?: boolean;
+  isPlaying?: boolean;
+}) => {
   return (
     <>
-      <Card hoverable>
-        <p>A basic card.</p>
+      <Card
+        hoverable
+        style={isPlaying ? { backgroundColor: brandPrimary } : {}}
+      >
+        <p>Some test Message</p>
+        <Card.Footer>
+          <Row justify="space-between" style={{ width: "100%" }}>
+            <p>User12312</p>
+            <Row justify="end">
+              {isPlaying ? (
+                <Button size="mini" style={{ marginRight: "4px" }}>
+                  Stop
+                </Button>
+              ) : (
+                <Button size="mini" style={{ marginRight: "4px" }}>
+                  Replay
+                </Button>
+              )}
+            </Row>
+          </Row>
+        </Card.Footer>
       </Card>
       <Spacer y={1} />
     </>
@@ -97,7 +122,7 @@ export const StreamView = () => {
         }}
       >
         <ChatMessage isAdmin />
-        <ChatMessage />
+        <ChatMessage isPlaying />
         <ChatMessage />
         <ChatMessage />
         <ChatMessage />
