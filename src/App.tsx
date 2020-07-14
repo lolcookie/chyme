@@ -232,7 +232,7 @@ const HomeStationCard = () => {
 };
 
 const Home = () => (
-  <div style={{ backgroundColor: "#FAFAFA" }}>
+  <div>
     <CoverFlowComponent />
     <Page>
       <Text h3 style={{ textAlign: "left" }}>
@@ -254,27 +254,43 @@ const Home = () => (
 
 function App() {
   return (
-    <div className="App">
+    <div
+      style={{
+        backgroundColor: "lightGray",
+        height: "100%",
+        width: "100%",
+        minHeight: "100vh",
+        minWidth: "100vw"
+      }}
+    >
       <Router>
         <Navbar />
-        {/*
+        <Row justify="center">
+          <div
+            style={{
+              maxWidth: "960px"
+            }}
+          >
+            {/*
           A <Switch> looks through all its children <Route>
           elements and renders the first one whose path
           matches the current URL. Use a <Switch> any time
           you have multiple routes, but you want only one
           of them to render at a time
         */}
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/stream">
-            <StreamView />
-          </Route>
-        </Switch>
+            <Switch>
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route path="/about">
+                <About />
+              </Route>
+              <Route path="/stream">
+                <StreamView />
+              </Route>
+            </Switch>
+          </div>
+        </Row>
       </Router>
     </div>
   );
