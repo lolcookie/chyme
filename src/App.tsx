@@ -18,6 +18,7 @@ import {
 } from "@zeit-ui/react";
 //@ts-ignore
 import Coverflow from "react-coverflow";
+import { useAuth } from "./firebase-hooks";
 
 import { Power, Menu, Search, ChevronLeft } from "@zeit-ui/react-icons";
 
@@ -108,6 +109,7 @@ const SearchBox = () => {
 export const Navbar = () => {
   const [searchText, setSearchText] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const { user, signIn, signOut, isAuthLoading } = useAuth();
   const handler = (e: any) => {
     setSearchText(e.target.value);
     console.log(e.target.value);
@@ -127,7 +129,9 @@ export const Navbar = () => {
       </Popover.Item>
       <Popover.Item line />
       <Popover.Item>
-        <span>Command-Line</span>
+        <Link to="#" onClick={signOut}>
+          Sign out
+        </Link>
       </Popover.Item>
     </>
   );
@@ -202,21 +206,27 @@ export const Navbar = () => {
             icon={<Search color="white" />}
           />
         )}
-        <Button size="small">Login</Button>
-
-        <Popover
-          placement="bottomEnd"
-          content={content}
-          style={{
-            cursor: "pointer",
-            padding: "4px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center"
-          }}
-        >
-          <Avatar text="Ana" />
-        </Popover>
+        {isAuthLoading ? (
+          <></>
+        ) : user ? (
+          <Popover
+            placement="bottomEnd"
+            content={content}
+            style={{
+              cursor: "pointer",
+              padding: "4px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center"
+            }}
+          >
+            <Avatar text={user.displayName} />
+          </Popover>
+        ) : (
+          <Button size="small" onClick={signIn}>
+            Login
+          </Button>
+        )}
       </Row>
     </Row>
   );

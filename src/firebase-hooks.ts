@@ -1,21 +1,24 @@
 import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 
-const provider = new firebase.auth.GoogleAuthProvider();
+const firebaseConfig = {
+  apiKey: "AIzaSyBd44OjubSb8o8aA97OjppjRUvA-v98USw",
+  authDomain: "chyme-b6c35.firebaseapp.com",
+  databaseURL: "https://chyme-b6c35.firebaseio.com",
+  projectId: "chyme-b6c35",
+  storageBucket: "chyme-b6c35.appspot.com",
+  messagingSenderId: "1049084196941",
+  appId: "1:1049084196941:web:39d7c8a25002245ca44404",
+  measurementId: "G-3NZ98NSVJN"
+};
 
-firebase.initializeApp({
-  apiKey: "### FIREBASE API KEY ###",
-  authDomain: "### FIREBASE AUTH DOMAIN ###",
-  projectId: "### CLOUD FIRESTORE PROJECT ID ###"
-});
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-const firestoreDb = firebase.firestore();
+var provider = new firebase.auth.GoogleAuthProvider();
+provider.addScope("profile");
+provider.addScope("email");
 
-firestoreDb.collection("users").add({
-  first: "Ada",
-  last: "Lovelace",
-  born: 1815
-});
+const firestoreDb = firebaseApp.firestore();
 
 interface User {
   displayName: string;
@@ -23,10 +26,12 @@ interface User {
   uid: string;
 }
 
-const useAuth = () => {
+export const useAuth = () => {
   const [user, setUser] = useState<User | null>();
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   useEffect(() => {
     return firebase.auth().onAuthStateChanged(function(user) {
+      setIsAuthLoading(false);
       if (user) {
         // User is signed in.
         var displayName = user.displayName || "Anon";
@@ -38,6 +43,15 @@ const useAuth = () => {
           email,
           uid
         });
+
+        firestoreDb
+          .collection("users")
+          .doc(uid)
+          .set({
+            displayName,
+            email,
+            uid
+          });
       } else {
         setUser(null);
       }
@@ -55,15 +69,9 @@ const useAuth = () => {
         var user = result.user;
         // ...
       })
-      .catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        // ...
-      });
-  return { user, signIn };
+      .catch(console.error);
+
+  const signOut = () => firebase.auth().signOut();
+
+  return { user, signIn, signOut, isAuthLoading };
 };
