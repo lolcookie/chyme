@@ -29,11 +29,11 @@ import {
   Link,
   useHistory
 } from "react-router-dom";
-
+import { brandPrimary } from "./theme";
 //Views
 import { StreamView } from "./StreamView";
-
-const brandPrimary = "#50E3C2";
+import { StartStreamView } from "./StartStreamView";
+import { DashboardView } from "./DashboardView";
 
 const Logo = ({ white }: { white?: boolean }) => (
   <Text size={24} style={{ color: white ? "white" : brandPrimary }}>
@@ -119,13 +119,13 @@ export const Navbar = () => {
   const content = () => (
     <>
       <Popover.Item title>
-        <span>User Settings</span>
+        <span>{user?.displayName}</span>
       </Popover.Item>
       <Popover.Item>
-        <Link to="#">A hyperlink</Link>
+        <Link to="/start-stream">Start a stream</Link>
       </Popover.Item>
       <Popover.Item>
-        <Link to="#">A hyperlink for edit profile</Link>
+        <Link to="/profile">View your profile</Link>
       </Popover.Item>
       <Popover.Item line />
       <Popover.Item>
@@ -269,7 +269,9 @@ const Home = () => (
 
       <HomeStationCard />
       <Spacer y={1} />
-
+      <Text h3 style={{ textAlign: "left" }}>
+        Just Ended
+      </Text>
       <HomeStationCard />
       <Spacer y={1} />
 
@@ -307,6 +309,12 @@ function App() {
             <Switch>
               <Route exact path="/">
                 <Home />
+              </Route>
+              <Route path="/start-stream">
+                <StartStreamView />
+              </Route>
+              <Route path="/dashboard">
+                <DashboardView />
               </Route>
               <Route path="/about">
                 <About />

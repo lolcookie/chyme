@@ -24,9 +24,8 @@ import Coverflow from "react-coverflow";
 import { Power, Menu, Search, ChevronLeft } from "@zeit-ui/react-icons";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { brandPrimary, brandSecondary } from "./theme";
 
-const brandPrimary = "#50E3C2";
-const brandSecondary = "#6558f5";
 const ChatMessage = ({
   isAdmin,
   isPlaying
