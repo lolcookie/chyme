@@ -6,6 +6,15 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+## Start Emulator
+
+`firebase emulators:start`
+
+Functions example on Gitpod
+
+`https://5001-c100c57f-d76e-4c07-ba83-508abdbff8e3.ws-us02.gitpod.io/chyme-b6c35/us-central1/helloWorld`
+
 ## Available Scripts
 
 In the project directory, you can run:
