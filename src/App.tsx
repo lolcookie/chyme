@@ -114,21 +114,27 @@ export const Navbar = () => {
     setSearchText(e.target.value);
     console.log(e.target.value);
   };
-
+  const [visible, setVisible] = useState(false);
+  const changeHandler = (next: boolean) => {
+    setVisible(next);
+  };
   const isWideDisplay = useMediaQuery("md", { match: "up" });
   const content = () => (
     <>
       <Popover.Item title>
         <span>{user?.displayName}</span>
       </Popover.Item>
-      <Popover.Item>
+      <Popover.Item onClick={() => setVisible(false)}>
         <Link to="/start-stream">Start a stream</Link>
       </Popover.Item>
-      <Popover.Item>
+      <Popover.Item onClick={() => setVisible(false)}>
+        <Link to="/stream-summary">View your past streams</Link>
+      </Popover.Item>
+      <Popover.Item onClick={() => setVisible(false)}>
         <Link to="/profile">View your profile</Link>
       </Popover.Item>
       <Popover.Item line />
-      <Popover.Item>
+      <Popover.Item onClick={() => setVisible(false)}>
         <Link to="#" onClick={signOut}>
           Sign out
         </Link>
@@ -212,6 +218,8 @@ export const Navbar = () => {
           <Popover
             placement="bottomEnd"
             content={content}
+            visible={visible}
+            onVisibleChange={changeHandler}
             style={{
               cursor: "pointer",
               padding: "4px",
