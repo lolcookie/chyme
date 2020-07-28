@@ -31,6 +31,7 @@ import {
   useHistory
 } from "react-router-dom";
 import { brandPrimary } from "./theme";
+import { createLiveStream } from "./firebase-hooks";
 
 export const StartStreamView = () => {
   const history = useHistory();
@@ -59,7 +60,11 @@ export const StartStreamView = () => {
                 color: "white",
                 opacity: canSubmit ? 1 : 0.5
               }}
-              onClick={() => history.push("/dashboard")}
+              onClick={() => {
+                createLiveStream({ title }).then(() =>
+                  history.push("/dashboard")
+                );
+              }}
               iconRight={<Mic color="white" />}
             >
               Start

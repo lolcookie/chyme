@@ -106,10 +106,9 @@ const SearchBox = () => {
   );
 };
 
-export const Navbar = () => {
+export const Navbar = ({ user, signOut, signIn }: any) => {
   const [searchText, setSearchText] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const { user, signIn, signOut, isAuthLoading } = useAuth();
   const handler = (e: any) => {
     setSearchText(e.target.value);
     console.log(e.target.value);
@@ -212,9 +211,7 @@ export const Navbar = () => {
             icon={<Search color="white" />}
           />
         )}
-        {isAuthLoading ? (
-          <></>
-        ) : user ? (
+        {user ? (
           <Popover
             placement="bottomEnd"
             content={content}
@@ -289,6 +286,10 @@ const Home = () => (
 );
 
 function App() {
+  const { user, signIn, signOut, isAuthLoading } = useAuth();
+  if (isAuthLoading) {
+    return <div>Loading</div>;
+  }
   return (
     <div
       style={{
@@ -300,7 +301,7 @@ function App() {
       }}
     >
       <Router>
-        <Navbar />
+        <Navbar user={user} signOut={signOut} signIn={signIn} />
         <Row justify="center">
           <div
             style={{
@@ -321,9 +322,11 @@ function App() {
               <Route path="/start-stream">
                 <StartStreamView />
               </Route>
-              <Route path="/dashboard">
-                <DashboardView />
-              </Route>
+              {user && (
+                <Route path="/dashboard">
+                  <DashboardView user={user} />
+                </Route>
+              )}
               <Route path="/about">
                 <About />
               </Route>
