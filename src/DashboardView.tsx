@@ -62,11 +62,15 @@ const DashboardLiveView = ({ muxLiveKey }: { muxLiveKey: MuxLiveKey }) => {
   }
   useEffect(() => {
     if (navigator.mediaDevices) {
-      const protocol = window.location.protocol.replace('http', 'ws')
       if (process.env.NODE_ENV === 'development') {
         //@ts-ignore
         wsRef.current = new WebSocket(
           `ws://localhost:8001/rtmp?key=${muxLiveKey.stream_key}`
+        )
+      } else {
+        //@ts-ignore
+        wsRef.current = new WebSocket(
+          `wss://chyme-284816.uc.r.appspot.com/rtmp?key=${muxLiveKey.stream_key}`
         )
       }
       //@ts-ignore

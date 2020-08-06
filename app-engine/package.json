@@ -9,7 +9,7 @@
     "node": ">=8.0.0"
   },
   "scripts": {
-    "deploy": "gcloud app deploy",
+    "deploy": "gcloud app deploy app.yml",
     "start": "node app.js",
     "lint": "eslint .",
     "fix": "eslint --fix .",
