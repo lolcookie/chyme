@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
+import React, { useState } from 'react'
+import logo from './logo.svg'
 import {
   Page,
   useMediaQuery,
@@ -14,37 +14,37 @@ import {
   Spacer,
   Input,
   Col,
-  AutoComplete
-} from "@zeit-ui/react";
+  AutoComplete,
+} from '@zeit-ui/react'
 //@ts-ignore
-import Coverflow from "react-coverflow";
-import { useAuth } from "./firebase-hooks";
+import Coverflow from 'react-coverflow'
+import { useAuth } from './firebase-hooks'
 
-import { Power, Menu, Search, ChevronLeft } from "@zeit-ui/react-icons";
+import { Power, Menu, Search, ChevronLeft } from '@zeit-ui/react-icons'
 
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link,
-  useHistory
-} from "react-router-dom";
-import { brandPrimary } from "./theme";
+  useHistory,
+} from 'react-router-dom'
+import { brandPrimary } from './theme'
 //Views
-import { StreamView } from "./StreamView";
-import { StartStreamView } from "./StartStreamView";
-import { DashboardView } from "./DashboardView";
+import { StreamView } from './StreamView'
+import { StartStreamView } from './StartStreamView'
+import { DashboardView } from './DashboardView'
 
 const Logo = ({ white }: { white?: boolean }) => (
-  <Text size={24} style={{ color: white ? "white" : brandPrimary }}>
+  <Text size={24} style={{ color: white ? 'white' : brandPrimary }}>
     Chyme
   </Text>
-);
+)
 //
 const CoverFlowComponent = () => (
   <div
     style={{
-      width: "100%"
+      width: '100%',
     }}
   >
     <Coverflow
@@ -56,14 +56,14 @@ const CoverFlowComponent = () => (
       clickable={true}
       active={0}
       media={{
-        "@media (max-width: 900px)": {
-          width: "600px",
-          height: "300px"
+        '@media (max-width: 900px)': {
+          width: '600px',
+          height: '300px',
         },
-        "@media (min-width: 900px)": {
-          width: "960px",
-          height: "600px"
-        }
+        '@media (min-width: 900px)': {
+          width: '960px',
+          height: '600px',
+        },
       }}
     >
       <img
@@ -88,14 +88,14 @@ const CoverFlowComponent = () => (
       />
     </Coverflow>
   </div>
-);
+)
 
 const SearchBox = () => {
   const options = [
-    { label: "London", value: "london" },
-    { label: "Sydney", value: "sydney" },
-    { label: "Shanghai", value: "shanghai" }
-  ];
+    { label: 'London', value: 'london' },
+    { label: 'Sydney', value: 'sydney' },
+    { label: 'Shanghai', value: 'shanghai' },
+  ]
   return (
     <AutoComplete
       clearable
@@ -103,25 +103,25 @@ const SearchBox = () => {
       placeholder="Enter here"
       options={options}
     />
-  );
-};
+  )
+}
 
-export const Navbar = ({ user, signOut, signIn }: any) => {
-  const [searchText, setSearchText] = useState("");
-  const [isSearchActive, setIsSearchActive] = useState(false);
+export const Navbar = ({ authUser, signOut, signIn }: any) => {
+  const [searchText, setSearchText] = useState('')
+  const [isSearchActive, setIsSearchActive] = useState(false)
   const handler = (e: any) => {
-    setSearchText(e.target.value);
-    console.log(e.target.value);
-  };
-  const [visible, setVisible] = useState(false);
+    setSearchText(e.target.value)
+    console.log(e.target.value)
+  }
+  const [visible, setVisible] = useState(false)
   const changeHandler = (next: boolean) => {
-    setVisible(next);
-  };
-  const isWideDisplay = useMediaQuery("md", { match: "up" });
+    setVisible(next)
+  }
+  const isWideDisplay = useMediaQuery('md', { match: 'up' })
   const content = () => (
     <>
       <Popover.Item title>
-        <span>{user?.displayName}</span>
+        <span>{authUser?.displayName}</span>
       </Popover.Item>
       <Popover.Item onClick={() => setVisible(false)}>
         <Link to="/start-stream">Start a stream</Link>
@@ -139,36 +139,36 @@ export const Navbar = ({ user, signOut, signIn }: any) => {
         </Link>
       </Popover.Item>
     </>
-  );
+  )
   return isSearchActive ? (
     <>
       <Row
         align="middle"
         style={{
-          height: "71px",
-          display: "absolute",
+          height: '71px',
+          display: 'absolute',
           backgroundColor: brandPrimary,
-          paddingRight: isWideDisplay ? "32px" : "16px",
-          paddingLeft: isWideDisplay ? "32px" : "16px"
+          paddingRight: isWideDisplay ? '32px' : '16px',
+          paddingLeft: isWideDisplay ? '32px' : '16px',
         }}
       >
         <Button
           onClick={() => setIsSearchActive(false)}
           size="large"
           style={{
-            minWidth: "44px",
+            minWidth: '44px',
             padding: 0,
-            backgroundColor: "transparent",
-            border: "none"
+            backgroundColor: 'transparent',
+            border: 'none',
           }}
           icon={<ChevronLeft color="white" />}
         />
         <Row
           style={{
-            background: "white",
-            width: "100%",
-            borderRadius: "5px",
-            marginRight: "8px"
+            background: 'white',
+            width: '100%',
+            borderRadius: '5px',
+            marginRight: '8px',
           }}
         >
           <SearchBox />
@@ -181,8 +181,8 @@ export const Navbar = ({ user, signOut, signIn }: any) => {
       justify="space-between"
       style={{
         backgroundColor: brandPrimary,
-        paddingRight: isWideDisplay ? "32px" : "16px",
-        paddingLeft: isWideDisplay ? "32px" : "16px"
+        paddingRight: isWideDisplay ? '32px' : '16px',
+        paddingLeft: isWideDisplay ? '32px' : '16px',
       }}
     >
       <Link to="/">
@@ -203,29 +203,29 @@ export const Navbar = ({ user, signOut, signIn }: any) => {
             onClick={() => setIsSearchActive(true)}
             size="large"
             style={{
-              minWidth: "64px",
+              minWidth: '64px',
               padding: 0,
-              backgroundColor: "transparent",
-              border: "none"
+              backgroundColor: 'transparent',
+              border: 'none',
             }}
             icon={<Search color="white" />}
           />
         )}
-        {user ? (
+        {authUser ? (
           <Popover
             placement="bottomEnd"
             content={content}
             visible={visible}
             onVisibleChange={changeHandler}
             style={{
-              cursor: "pointer",
-              padding: "4px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center"
+              cursor: 'pointer',
+              padding: '4px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
             }}
           >
-            <Avatar text={user.displayName} />
+            <Avatar text={authUser.displayName} />
           </Popover>
         ) : (
           <Button size="small" onClick={signIn}>
@@ -234,39 +234,39 @@ export const Navbar = ({ user, signOut, signIn }: any) => {
         )}
       </Row>
     </Row>
-  );
-};
+  )
+}
 
-const About = () => <Text h3>About</Text>;
+const About = () => <Text h3>About</Text>
 
 const HomeStationCard = () => {
-  const history = useHistory();
+  const history = useHistory()
 
   return (
-    <Card shadow onClick={() => history.push("/stream")}>
+    <Card shadow onClick={() => history.push('/stream')}>
       <Row align="middle">
-        <div style={{ height: "100px", width: "100px", borderRadius: "4px" }}>
+        <div style={{ height: '100px', width: '100px', borderRadius: '4px' }}>
           <Image
             src="https://www.100gecs.com/images/RFPCover.jpg"
             height={100}
             width={100}
-            style={{ objectFit: "cover", borderRadius: "4px" }}
+            style={{ objectFit: 'cover', borderRadius: '4px' }}
           />
         </div>
-        <Col style={{ paddingLeft: "16px", paddingRight: "16px" }}>
+        <Col style={{ paddingLeft: '16px', paddingRight: '16px' }}>
           <h4>The Evil Rabbit</h4>
           <p>shadow card.</p>
         </Col>
       </Row>
     </Card>
-  );
-};
+  )
+}
 
 const Home = () => (
   <div>
     <CoverFlowComponent />
     <Page>
-      <Text h3 style={{ textAlign: "left" }}>
+      <Text h3 style={{ textAlign: 'left' }}>
         Recommended
       </Text>
       <HomeStationCard />
@@ -274,7 +274,7 @@ const Home = () => (
 
       <HomeStationCard />
       <Spacer y={1} />
-      <Text h3 style={{ textAlign: "left" }}>
+      <Text h3 style={{ textAlign: 'left' }}>
         Just Ended
       </Text>
       <HomeStationCard />
@@ -283,29 +283,29 @@ const Home = () => (
       <HomeStationCard />
     </Page>
   </div>
-);
+)
 
 function App() {
-  const { user, signIn, signOut, isAuthLoading } = useAuth();
+  const { authUser, signIn, signOut, isAuthLoading } = useAuth()
   if (isAuthLoading) {
-    return <div>Loading</div>;
+    return <div>Loading</div>
   }
   return (
     <div
       style={{
-        backgroundColor: "lightGray",
-        height: "100%",
-        width: "100%",
-        minHeight: "100vh",
-        minWidth: "100vw"
+        backgroundColor: 'lightGray',
+        height: '100%',
+        width: '100%',
+        minHeight: '100vh',
+        minWidth: '100vw',
       }}
     >
       <Router>
-        <Navbar user={user} signOut={signOut} signIn={signIn} />
+        <Navbar authUser={authUser} signOut={signOut} signIn={signIn} />
         <Row justify="center">
           <div
             style={{
-              maxWidth: "960px"
+              maxWidth: '960px',
             }}
           >
             {/*
@@ -322,9 +322,9 @@ function App() {
               <Route path="/start-stream">
                 <StartStreamView />
               </Route>
-              {user && (
+              {authUser && (
                 <Route path="/dashboard">
-                  <DashboardView user={user} />
+                  <DashboardView authUser={authUser} />
                 </Route>
               )}
               <Route path="/about">
@@ -338,7 +338,7 @@ function App() {
         </Row>
       </Router>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

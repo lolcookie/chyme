@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import logo from "./logo.svg";
+import React, { useState, useEffect, useRef } from 'react'
+
+import logo from './logo.svg'
 import {
   Page,
   useMediaQuery,
@@ -16,94 +17,113 @@ import {
   Modal,
   Col,
   Textarea,
-  AutoComplete
-} from "@zeit-ui/react";
+  AutoComplete,
+} from '@zeit-ui/react'
 //@ts-ignore
-import Coverflow from "react-coverflow";
+import Coverflow from 'react-coverflow'
 
-import { Mic } from "@zeit-ui/react-icons";
+import { Mic } from '@zeit-ui/react-icons'
 
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link,
-  useHistory
-} from "react-router-dom";
-import { brandPrimary } from "./theme";
-import {
-  createLiveStream,
-  useUserStreams,
-  User,
-  UserStream,
-  pushRealtimeChunk
-} from "./firebase-hooks";
+  useHistory,
+} from 'react-router-dom'
+import { brandPrimary } from './theme'
+import { AuthUser, MuxLiveKey, useMuxLiveKey } from './firebase-hooks'
 
-export const DashboardView = ({ user }: { user: User }) => {
-  const history = useHistory();
-  const { userStreams, isUserStreamsLoading } = useUserStreams(user.uid);
-  const isWideDisplay = useMediaQuery("md", { match: "up" });
-  console.log({ userStreams });
-  if (isUserStreamsLoading || userStreams === undefined) {
-    return <div>Loading</div>;
-  } else if (userStreams === null) {
-    return <div>Something went wrong please go back</div>;
+export const DashboardView = ({ authUser }: { authUser: AuthUser }) => {
+  const history = useHistory()
+  console.log({ authUser })
+  const isWideDisplay = useMediaQuery('md', { match: 'up' })
+  const { muxLiveKey, isMuxLiveKeyLoading } = useMuxLiveKey(authUser.uid)
+  if (isMuxLiveKeyLoading || muxLiveKey === null || muxLiveKey === undefined) {
+    return <div>Loading</div>
   } else {
-    return <DashboardLiveView userStreams={userStreams} />;
+    return <DashboardLiveView muxLiveKey={muxLiveKey} />
   }
-};
+}
 
-const DashboardLiveView = ({ userStreams }: { userStreams: UserStream[] }) => {
-  const [hasMicrophoneAccess, sethasMicrophoneAccess] = useState(false);
-  console.log(userStreams);
+const DashboardLiveView = ({ muxLiveKey }: { muxLiveKey: MuxLiveKey }) => {
+  const [hasMicrophoneAccess, sethasMicrophoneAccess] = useState(false)
+  const [connected, setConnected] = useState(false)
+  const [streaming, setStreaming] = useState(false)
+
+  const wsRef = useRef()
+  const mediaRecorderRef = useRef()
+  const inputStreamRef = useRef()
+  console.log({ muxLiveKey })
+  const stopStreaming = () => {
+    //@ts-ignore
+    mediaRecorderRef.current.stop()
+    setStreaming(false)
+  }
   useEffect(() => {
-    //@ts-ignore
-    let mediaRecorder;
-    //@ts-ignore
-    let mediaStream;
-
     if (navigator.mediaDevices) {
-      console.log("getUserMedia supported.");
+      const protocol = window.location.protocol.replace('http', 'ws')
+      if (process.env.NODE_ENV === 'development') {
+        //@ts-ignore
+        wsRef.current = new WebSocket(
+          `ws://localhost:8001/rtmp?key=${muxLiveKey.stream_key}`
+        )
+      }
+      //@ts-ignore
+      wsRef.current.addEventListener('open', function open() {
+        setConnected(true)
+      })
+      //@ts-ignore
+      wsRef.current.addEventListener('close', () => {
+        setConnected(false)
+        stopStreaming()
+      })
 
-      const constraints = { audio: true };
-      let chunks = [];
+      const constraints = { audio: true }
       navigator.mediaDevices
         .getUserMedia(constraints)
-        .then(function(stream) {
-          mediaStream = stream;
+        .then(function (stream) {
+          sethasMicrophoneAccess(true)
           // @ts-ignore
-          mediaRecorder = new MediaRecorder(stream, {
-            audioBitsPerSecond: 128000
-          });
-          mediaRecorder.start(1000);
-          sethasMicrophoneAccess(true);
-          mediaRecorder.addEventListener("dataavailable", (e: any) => {
-            console.log("DATA AVAILABLE");
-            // Then send the binary data via the WebSocket connection!
-            pushRealtimeChunk(userStreams[0].uid, e.data);
-            console.log(e);
-          });
+          inputStreamRef.current = stream
+          // @ts-ignore
+          mediaRecorderRef.current = new MediaRecorder(stream, {
+            audioBitsPerSecond: 128000,
+          })
+          //@ts-ignore
+          mediaRecorderRef.current.addEventListener('dataavailable', (e) => {
+            //@ts-ignore
+            if (wsRef.current.readyState === 1) {
+              //@ts-ignore
+              wsRef.current.send(e.data)
+            }
+          })
+          //@ts-ignore
+          mediaRecorderRef.current.addEventListener('stop', () => {
+            // stopStreaming()
+            //@ts-ignore
+            wsRef.current.close()
+          })
+          //@ts-ignore
+          mediaRecorderRef.current.start(1000)
         })
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e))
     }
 
     return () => {
-      console.log("THIS FIRES");
+      console.log('THIS FIRES')
       //@ts-ignore
-      if (mediaRecorder && mediaStream) {
-        //@ts-ignore
-        mediaStream.getTracks().forEach(track => track.stop());
-        //@ts-ignore
-        mediaRecorder.stop();
-      }
-    };
-  }, []);
+      // if (inputStreamRef.current && mediaRecorderRef.current) {
+      //   stopStreaming()
+      // }
+    }
+  }, [muxLiveKey.stream_key])
 
   return (
     <>
       <Page>
         <Card>
-          {hasMicrophoneAccess ? (
+          {streaming && connected && hasMicrophoneAccess ? (
             <Text h3>You are Live</Text>
           ) : (
             <Text h3>Activating Microphone</Text>
@@ -111,5 +131,5 @@ const DashboardLiveView = ({ userStreams }: { userStreams: UserStream[] }) => {
         </Card>
       </Page>
     </>
-  );
-};
+  )
+}

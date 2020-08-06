@@ -6,8 +6,13 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-
 ## Start Emulator
+
+`export FIRESTORE_EMULATOR_HOST="localhost:8080"`
+
+`export MUX_TOKEN_ID=***`
+
+`MUX_TOKEN_SECRET=***`
 
 `firebase emulators:start`
 
