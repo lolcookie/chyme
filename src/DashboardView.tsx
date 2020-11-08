@@ -62,17 +62,13 @@ const DashboardLiveView = ({ muxLiveKey }: { muxLiveKey: MuxLiveKey }) => {
   }
   useEffect(() => {
     if (navigator.mediaDevices) {
-      if (process.env.NODE_ENV === 'development') {
-        //@ts-ignore
-        wsRef.current = new WebSocket(
-          `ws://localhost:8001/rtmp?key=${muxLiveKey.stream_key}`
-        )
-      } else {
-        //@ts-ignore
-        wsRef.current = new WebSocket(
-          `wss://chyme-284816.uc.r.appspot.com/rtmp?key=${muxLiveKey.stream_key}`
-        )
-      }
+      console.log('OPENNING SOCKET')
+      //@ts-ignore
+      wsRef.current = new WebSocket(
+        // `ws://localhost:8001/rtmp?key=${muxLiveKey.stream_key}`
+        `wss://chyme-284816.uc.r.appspot.com/rtmp?key=${muxLiveKey.stream_key}`
+      )
+
       //@ts-ignore
       wsRef.current.addEventListener('open', function open() {
         setConnected(true)

@@ -111,3 +111,34 @@ export const useMuxLiveKey = (userId: string) => {
   }, [userId])
   return { muxLiveKey, isMuxLiveKeyLoading }
 }
+
+export interface LiveStreamRequest {
+  coverImage?: string
+  description?: string
+  name?: string
+  title?: string
+}
+
+export interface LiveStream extends LiveStreamRequest {
+  coverImage?: string
+  description?: string
+  id: string
+  name?: string
+  title?: string
+}
+
+export const useLiveStreams = () => {
+  const [liveStreams, setLiveStreams] = useState<LiveStream[]>([])
+  const [isLiveStreamsLoading, setIsLiveStreamsLoading] = useState(true)
+  useEffect(() => {
+    firestoreDb
+      .collection('liveStreams')
+      .get()
+      .then((docs) => {
+        //@ts-ignore
+        setLiveStreams(docs.map((d) => d.data()))
+        setIsLiveStreamsLoading(false)
+      })
+  }, [])
+  return { liveStreams, isLiveStreamsLoading }
+}
