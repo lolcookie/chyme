@@ -2,7 +2,7 @@ import firebase from 'firebase'
 import React, { useEffect, useState } from 'react'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBd44OjubSb8o8aA97OjppjRUvA-v98USw',
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: 'chyme-b6c35.firebaseapp.com',
   databaseURL:
     process.env.NODE_ENV === 'development'
